@@ -24,12 +24,12 @@
         
         
         function action(event) {
-            alert("Test");
+           
           Office.context.mailbox.item.subject.getAsync((result) => {
             debugger;
             if (result.status === Office.AsyncResultStatus.Succeeded) {
               let currentSubject = result.value;
-              const secureTag = "[secure]";
+              const secureTag = "[secure123]";
               // Check if "[secure]" is already appended
               if (currentSubject.endsWith(secureTag)) {
                 // Remove [secure] from subject
