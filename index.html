@@ -1,9 +1,66 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+
 <!DOCTYPE html>
 <html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <script lang="javascript" type="text/javascript">
+        /*
+         * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+         * See LICENSE in the project root for license information.
+         */
+        
+        /* global Office */
+        
+        Office.onReady(() => {
+          // If needed, Office.js is ready to be called.
+        });
+        
+        
+        function action(event) {
+          Office.context.mailbox.item.subject.getAsync((result) => {
+            debugger;
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+              let currentSubject = result.value;
+              const secureTag = "[secure]";
+              // Check if "[secure]" is already appended
+              if (currentSubject.endsWith(secureTag)) {
+                // Remove [secure] from subject
+                currentSubject = currentSubject.slice(0, -secureTag.length).trim();
+              } else {
+                // Append [secure] to subject
+                currentSubject = `${currentSubject} ${secureTag}`.trim();
+              }
+        
+              // Set the updated subject line
+              Office.context.mailbox.item.subject.setAsync(currentSubject, (setResult) => {
+                if (setResult.status === Office.AsyncResultStatus.Failed) {
+                  console.error("Error updating subject:", setResult.error.message);
+                }
+              });
+            } else {
+              console.error("Error getting subject:", result.error.message);
+            }
+        
+            event.completed(); // Notify Outlook that processing is done
+          });
+        
+        }
+        
+        // Register the function with Office.
+        Office.actions.associate("action", action);
+        
+        </script>
+</head>
+
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-<script src="https://static.elfsight.com/platform/platform.js" async></script>
-<div class="elfsight-app-0e476854-6c69-4f36-b262-862a0299c6f7" data-elfsight-app-lazy></div>
+  
 </body>
+
 </html>
